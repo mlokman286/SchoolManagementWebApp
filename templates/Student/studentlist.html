@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-12">
+       <div class="card card-table">
+          <div class="card-body">
+             <div class="table-responsive">
+                <table id="table_id" class="table table-hover table-center mb-0">
+                   <thead>
+                      <tr>
+                        <th>Student ID</th>
+                        <th>Profile Pic</th>
+                         <th>UserName</th>
+                         <th>Email</th>
+                         <th>Course</th>
+                         <th>Session Year</th>
+                         <th>gender</th>
+                         <th class="text-right">Action</th>
+                      </tr>
+                   </thead>
+                   <tbody>
+                     
+                     {% for s in  students %}
+                       
+                     <tr>
+                         <td>{{s.id}}</td>
+                         <td>
+                            <h2 class="table-avatar">
+                               <a href="student-details.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="{% if s.admin.profile_pic %}{{s.admin.profile_pic.url}}{% endif %}" alt="student Image"></a>
+                               <a href="student-details.html">{{s.admin.first_name}}  {{s.admin.last_name}}</a>
+                            </h2>
+                         </td>
+                         <td>{{s.admin.username}}</td>
+                         <td>{{s.admin.email}}</td>
+                         <td>{{s.courseid}}</td>
+                         <td>{{s.sessionyearid}}</td>
+                         <td>{{s.gender}}</td>
+                         <td class="text-right">
+                            <div class="actions">
+                               <a href=" {% url 'editStudent' s.id %}" class="btn btn-sm bg-success-light mr-2">
+                               <i class="fas fa-pen"></i>
+                               </a> 
+                               <a href="#" class="btn btn-sm bg-danger-light">
+                               <i class="fas fa-trash"></i>
+                               </a>
+                            </div>
+                         </td>
+                      </tr>   
+                      {% endfor %} 
+                   </tbody>
+                </table>
+               </div>
+            </div>
+         </div>
+      </div>
+      <a href="{% url "addStudent" %}" class="btn btn-outline-success w-25 mx-auto mb-3 ">📝 Add Student </a>
+ </div>
+    
+{% endblock %}
+    

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+       <div class="card">
+          <div class="card-body">
+             <form  action=" {% url 'addSubject' %} "  method="post" enctype="multipart/form-data">
+               {% csrf_token %}
+                <div class="row">
+                   <div class="col-12">
+                      <h5 class="form-title"><span>Add Subject</span></h5>
+                   </div>
+
+                   <div class="col-12 col-sm-6">
+                      <div class="form-group">
+                         <label>Subject ID</label>
+                         <input name="subject_id" type="text" class="form-control">
+                      </div>
+                   </div>
+             
+                  <div class="col-12 col-sm-6">
+                    <div class="form-group">
+                       <label>Subject Name</label>
+                       <input name="subject_name"  type="text" class="form-control">
+                    </div>
+                 </div>
+
+                 <div class="col-12 col-sm-6">
+                  <div class="form-group"  >
+                     <label>Course</label>
+                     <select class="form-control" name="course_id">
+                        <option>Select Course</option>
+                        {% for c in course %}
+                        <option value="{{c.id}}"> {{c.name}} </option>
+                        {% endfor %}
+                     </select>
+                  </div>
+               </div>
+
+               <div class="col-12 col-sm-6">
+                  <div class="form-group"  >
+                     <label>Teacher</label>
+                     <select class="form-control" name="teacher_id">
+                        <option>Select Teacher</option>
+                        {% for t in teacher %}
+                        <option value="{{t.id}}"> {{t.admin.get_full_name}} </option>
+                        {% endfor %}
+                     </select>
+                  </div>
+               </div>
+              
+                
+                   <div class="col-12">
+                      <button type="submit" class="btn btn-primary">Add Subject</button>
+                      <a href="{% url "subjectList" %}" class="btn btn-danger">Cancel</a>
+                   </div>
+                   <div class="col-12">
+                     {% include 'message.html' %}
+                  </div>
+                </div>
+             </form>
+          </div>
+       </div>
+    </div>
+ </div>
+    
+{% endblock  %}
+    
