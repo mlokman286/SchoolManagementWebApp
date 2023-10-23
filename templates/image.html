@@ -1,0 +1,9 @@
+<!-- for img prevew -->
+
+<script>
+    const img = document.getElementById('img')
+    const input = document.getElementById('imgfile')
+    input.addEventListener('change',()=>{
+        img.src = URL.createObjectURL(input.files[0])
+    })
+</script>

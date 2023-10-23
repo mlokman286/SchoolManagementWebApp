@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-
+{% load static %}
 
 {% block content %}
 <div class="row">
     <div class="col-sm-12">
        <div class="card">
           <div class="card-body">
-             <form  action=" {% url 'addStudent' %} "  method="post" enctype="multipart/form-data">
+             <form   action=" {% url 'addStudent' %} "  method="post" enctype="multipart/form-data">
                {% csrf_token %}
                 <div class="row">
                    <div class="col-12">
@@ -16,33 +16,33 @@
                    <div class="col-12 col-sm-6">
                       <div class="form-group">
                          <label>First Name</label>
-                         <input name="first_name" type="text" class="form-control">
+                         <input name="first_name" type="text" class="form-control" required>
                       </div>
                    </div>
                    <div class="col-12 col-sm-6">
                      <div class="form-group">
                         <label>Last Name</label>
-                        <input name="last_name" type="text" class="form-control">
+                        <input name="last_name" type="text" class="form-control" required>
                      </div>
                   </div>
 
                   <div class="col-12 col-sm-6">
                      <div class="form-group">
                         <label>Email</label>
-                        <input name="email" type="text" class="form-control">
+                        <input name="email" type="text" class="form-control" required>
                      </div>
                   </div>
                   
                    <div class="col-12 col-sm-6">
                       <div class="form-group">
                          <label>Username</label>
-                         <input name="username"  type="text" class="form-control">
+                         <input name="username"  type="text" class="form-control" required>
                       </div>
                    </div>
                    <div class="col-11 col-sm-6">
                      <div class="form-group">
                         <label>Password</label>
-                        <input name="password"  type="password" class="form-control">
+                        <input name="password"  type="password" class="form-control" required>
                      </div>
                   </div>
                   <div class="col-12 col-sm-6">
@@ -54,7 +54,7 @@
                    <div class="col-12 col-sm-6">
                       <div class="form-group">
                          <label>Gender</label>
-                         <select class="form-control" name="gender">
+                         <select class="form-control" name="gender" required>
                             <option>Select Gender</option>
                             <option>Female</option>
                             <option>Male</option>
@@ -66,7 +66,7 @@
                    <div class="col-12 col-sm-6">
                      <div class="form-group"  >
                         <label>Course</label>
-                        <select class="form-control" name="courseid">
+                        <select class="form-control" name="courseid"  required>
                            <option>Select Course</option>
                            {% for c in course %}
                            <option value="{{c.id}}"> {{c.name}} </option>
@@ -78,7 +78,7 @@
                    <div class="col-12 col-sm-6">
                      <div class="form-group">
                         <label>Session Year</label>
-                        <select class="form-control" name="sessionyearid">
+                        <select required class="form-control" name="sessionyearid"  >
                            <option>Select Session</option>
                            {% for s in session %}
                            <option value="{{s.id}}"> {{s.sessionStart}} {{"-"}} {{s.sessionEnd}} </option>
@@ -86,17 +86,21 @@
                         </select>
                      </div>
                   </div>
-                
-                   <div class="col-12 col-sm-6">
+                  
+                   <div class="col-12 col-sm-6" >
                       <div class="form-group">
                          <label>Student Image</label>
-                         <input type="file" name="profile_pic" class="form-control">
+                         <input id="imgfile" type="file" name="profile_pic" class="form-control"  required>
                       </div>
                    </div>
                    
-                   <div class="col-12">
+                   <div class="col-12 col-sm-6">
                       <button type="submit" class="btn btn-primary">Add Student</button>
-                      <a href="{% url "adminPage" %}" class="btn btn-danger">Cancel</a>
+                      <a href="{% url "studentList" %}" class="btn btn-danger">Cancel</a>
+                   </div>
+                   <div class='col-12 col-sm-2'>
+                     <p>Image Preview</p>
+                     <img id='img' class='myavatar img-circle img-thumbnail'  src="{% static "assets/img/default.png" %}" alt="">
                    </div>
                    <div class="col-12">
                      {% include 'message.html' %}
@@ -107,6 +111,5 @@
        </div>
     </div>
  </div>
-    
 {% endblock  %}
     

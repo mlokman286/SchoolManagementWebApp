@@ -69,7 +69,17 @@ def loginPage(request):
     return render(request,'login.html')
 
 def adminPage(request):
-    return render(request,'myAdmin/adminhome.html')
+    teacher = TeacherModel.objects.all().count
+    student = StudentModel.objects.all().count
+    department = CourseModel.objects.all().count
+    subject = SubjectModel.objects.all().count
+    context ={
+        'teacher' : teacher,
+        'student' : student,
+        'department' : department,
+        'subject' : subject,
+    }
+    return render(request,'myAdmin/adminhome.html',context)
 
 def myProfile(request):
     user = request.user
@@ -163,6 +173,7 @@ def addStudent(request):
 
         if CustomUser.objects.filter(email=email).exists() or CustomUser.objects.filter(username=username).exists():
             messages.error(request, error_messages['error'])
+            
         else:
             # Create the customUser instance
             user = CustomUser.objects.create_user(username=username, email=email, password=password)
@@ -188,7 +199,7 @@ def addStudent(request):
             student.save() 
             messages.success(request, error_messages['success'])
             return redirect("studentList")
-
+        
     course = CourseModel.objects.all()
     session = SessionYearModel.objects.all()
     st=StudentModel.objects.all()

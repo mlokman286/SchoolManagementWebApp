@@ -51,11 +51,18 @@
                       {% endfor %} 
                    </tbody>
                 </table>
+
+                <div>
+                  {% include "message.html" %}
+                </div>
                </div>
             </div>
          </div>
       </div>
-      <a href="{% url "addStudent" %}" class="btn btn-outline-success w-25 mx-auto mb-3 ">📝 Add Student </a>
+      <div> 
+      </div>
+      <a href="{% url "addStudent" %}" class="btn btn-outline-success w-25 mx-auto mb-3 ">📝 Add Student </a><br>
+      
  </div>
     
 {% endblock %}
