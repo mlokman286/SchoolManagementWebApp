@@ -8,68 +8,88 @@ from django.contrib.auth.models import User
 
 # Create your views here.
 def signupPage(request):
-    error_messages = {
+    if not request.user.is_authenticated:
+        error_messages = {
         'password_error': 'Password and Confirm Password not match',
         'username_error':'This username is already exits',
         'email_error':'This email is already exits'
-    }
-    if request.method == "POST":
-        uname = request.POST.get("name")
-        email = request.POST.get("email")
-        pass1 = request.POST.get("password")
-        pass2 = request.POST.get("confirmpassword")
-        if pass1!= pass2:
-            messages.error(request, error_messages['password_error'])
-        else:
-            if CustomUser.objects.filter(username = uname):
-                messages.error(request, error_messages['username_error'])
-            elif CustomUser.objects.filter(email = email):
-                messages.error(request, error_messages['email_error'])
+        }
+        if request.method == "POST":
+            uname = request.POST.get("name")
+            email = request.POST.get("email")
+            pass1 = request.POST.get("password")
+            pass2 = request.POST.get("confirmpassword")
+            if pass1!= pass2:
+                messages.error(request, error_messages['password_error'])
             else:
-                # Use your customUser model to create a user
-                myuser = CustomUser.objects.create_user(username=uname, email=email, password=pass1)
-                myuser.save()
-                return redirect("loginPage")
+                if CustomUser.objects.filter(username = uname):
+                    messages.error(request, error_messages['username_error'])
+                elif CustomUser.objects.filter(email = email):
+                    messages.error(request, error_messages['email_error'])
+                else:
+                    # Use your customUser model to create a user
+                    myuser = CustomUser.objects.create_user(username=uname, email=email, password=pass1)
+                    myuser.save()
+                    return redirect("loginPage")
 
-    return render(request,'signup.html')
+        return render(request,'signup.html')
+    else:
+        return redirect('adminPage')
 
 def loginPage(request):
-    error_messages = {
+    if not request.user.is_authenticated:
+        error_messages = {
         'username_error': 'Username is required.',
         'password_error': 'Password is required.',
         'login_error': 'Invalid username or password. Please try again.',
-    }
-    if request.method == "POST":
-        username = request.POST.get("username")
-        pass1 = request.POST.get("password")  
-        
-        if not username:
-            messages.error(request, error_messages['username_error'])
-        elif not pass1:
-            messages.error(request, error_messages['password_error'])
-        else:
-            user =authenticate(request, username=username, password=pass1,)
-
-            if user is not None:
-                login(request,user)
-                user_type = user.user_type
-                if user_type == '1':
-                    return redirect("adminPage")
-                elif user_type == '2':
-                    # return render(request, "Staff/staffhome.html")
-                    return HttpResponse("Teacher")
-                elif user_type == '3':
-                    # return render(request, "Students/Stustudenthome.html")
-                    return HttpResponse("Student")
-                else:
-                    return redirect("signupPage")
+        }
+        if request.method == "POST":
+            username = request.POST.get("username")
+            pass1 = request.POST.get("password")  
+            
+            if not username:
+                messages.error(request, error_messages['username_error'])
+            elif not pass1:
+                messages.error(request, error_messages['password_error'])
             else:
-                messages.error(request, error_messages['login_error'])
+                user =authenticate(request, username=username, password=pass1,)
 
-    return render(request,'login.html')
+                if user is not None:
+                    login(request,user)
+                    user_type = user.user_type
+                    if user_type == '1':
+                        return redirect("adminPage")
+                    elif user_type == '2':
+                        # return render(request, "Staff/staffhome.html")
+                        return HttpResponse("Teacher")
+                    elif user_type == '3':
+                        # return render(request, "Students/Stustudenthome.html")
+                        return HttpResponse("Student")
+                    else:
+                        return redirect("signupPage")
+                else:
+                    messages.error(request, error_messages['login_error'])
+
+        return render(request,'login.html')
+    else:
+        return redirect('adminPage')
 
 def adminPage(request):
-    return render(request,'myAdmin/adminhome.html')
+    teacher = TeacherModel.objects.all()
+    student = StudentModel.objects.all()
+    department = CourseModel.objects.all()
+    subject = SubjectModel.objects.all()
+    maleStudent = StudentModel.objects.filter(gender='Male').count()
+    femaleStudent = StudentModel.objects.filter(gender='Female').count()
+    context ={
+        'teacher' : teacher,
+        'student' : student,
+        'department' : department,
+        'subject' : subject,
+        'maleStudent':maleStudent,
+        'femaleStudent':femaleStudent
+    }
+    return render(request,'myAdmin/adminhome.html',context)
 
 def myProfile(request):
     user = request.user
@@ -144,6 +164,37 @@ def changePassword(request):
             messages.error(request, error_messages['old_password'])
     return render(request,'changePassword.html')
 
+def forgetPassword(request):
+    if not request.user.is_authenticated:
+        error_messages = {
+        'success': 'Successfully create newpassword',
+        'mismatch': 'New password and confirm password not matched',
+        'username': 'Username is not matched',
+        'email':'email is not matched'
+        }
+        if request.method == "POST":
+            uname = request.POST.get("username")
+            uemail = request.POST.get("email")
+            pass1 = request.POST.get("password1")
+            pass2 = request.POST.get("password2")
+            if not CustomUser.objects.filter(username = uname):
+                messages.error(request,error_messages['username'])
+            elif not CustomUser.objects.filter(email = uemail):
+                messages.error(request,error_messages['email'])
+            else:
+                if pass1==pass2:
+                    user = CustomUser.objects.get(username = uname)
+                    user.set_password(pass1)
+                    user.save()
+                    messages.success(request,error_messages['success'])
+                    return redirect('loginPage')
+                else:
+                    messages.success(request,error_messages['mismatch'])
+            
+        return render(request,'forgetPassword.html')
+    else:
+        return redirect('adminPage')
+
 def addStudent(request):
     error_messages = {
         'success': 'Student Add Successfully',
@@ -163,6 +214,7 @@ def addStudent(request):
 
         if CustomUser.objects.filter(email=email).exists() or CustomUser.objects.filter(username=username).exists():
             messages.error(request, error_messages['error'])
+            
         else:
             # Create the customUser instance
             user = CustomUser.objects.create_user(username=username, email=email, password=password)
@@ -188,7 +240,7 @@ def addStudent(request):
             student.save() 
             messages.success(request, error_messages['success'])
             return redirect("studentList")
-
+        
     course = CourseModel.objects.all()
     session = SessionYearModel.objects.all()
     st=StudentModel.objects.all()

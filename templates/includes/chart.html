@@ -1,0 +1,84 @@
+<script>
+    
+    {% comment %} allDetails {% endcomment %}
+        var options = {
+          series: [{{student.count}}, {{teacher.count}}, {{department.count}}, {{subject.count}}],
+          chart: {
+          width: 380,
+          type: 'pie',
+        },
+        labels: ['Student', 'Teacher', 'Department', 'Subject'],
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#allDetails"), options);
+        chart.render();
+
+        
+      {% comment %} Studnets {% endcomment %}
+        var options = {
+          series: [{{maleStudent}},{{femaleStudent}}],
+          chart: {
+          type: 'donut',
+        },
+        labels: ['Boys','Girls'],
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200,
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#studentChart"), options);
+        chart.render();
+        
+        {% comment %} student vs Teacher {% endcomment %}
+
+           var options = {
+          series: [{{student.count}}, {{teacher.count}}],
+          chart: {
+          height: 480,
+          type: 'radialBar',
+        },
+        plotOptions: {
+          radialBar: {
+            dataLabels: {
+              name: {
+                fontSize: '30px',
+              },
+              value: {
+                fontSize: '20px',
+              },
+              total: {
+                show: true,
+                label: 'Total',
+              }
+            }
+          }
+        },
+        labels: ['Student','Teacher'],
+        };
+
+        var chart = new ApexCharts(document.querySelector("#teacher_student"), options);
+        chart.render();
+      
+      
+      
+      
+</script>

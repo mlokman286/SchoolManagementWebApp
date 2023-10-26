@@ -9,6 +9,7 @@ urlpatterns = [
     path('', views.signupPage,name='signupPage'),
     path('loginPage', views.loginPage,name='loginPage'),
     path('logoutPage', views.logoutPage,name='logoutPage'),
+    path('forgetPassword', views.forgetPassword,name='forgetPassword'),
 
     # admin Panel
     path('adminPage', views.adminPage,name='adminPage'),

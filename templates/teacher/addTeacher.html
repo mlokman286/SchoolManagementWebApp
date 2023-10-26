@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 <div class="row">
     <div class="col-sm-12">
@@ -80,23 +80,27 @@
                        <input name="mobile"  type="text" class="form-control">
                     </div>
                  </div>
+                 <div class='col-5 col-sm-2'>
+                     <p>Image Preview</p>
+                     <img id='img' class='myavatar img-circle img-thumbnail'  src="{% static "assets/img/default.png" %}" alt="">
+                  </div>
                  <div class="col-12 col-sm-6">
                     <div class="form-group">
                        <label>Experience</label>
                        <input name="experience"  type="text" class="form-control">
                     </div>
                  </div>
-                
-                   <div class="col-12 col-sm-6">
-                      <div class="form-group">
-                         <label>Teacher Image</label>
-                         <input type="file" name="profile_pic" class="form-control">
-                      </div>
-                   </div>
+                 
+                  <div class="col-12 col-sm-6">
+                     <div class="form-group">
+                        <label>Teacher Image</label>
+                        <input id="imgfile" type="file" name="profile_pic" class="form-control">
+                     </div>
+                  </div>
                    
                    <div class="col-12">
-                      <button type="submit" class="btn btn-primary">Add Teacher</button>
-                        <a href="{% url 'teacherList' %}" class="btn btn-danger">Cancel</a>
+                     <button type="submit" class="btn btn-primary">Add Teacher</button>
+                     <a href="{% url 'teacherList' %}" class="btn btn-danger">Cancel</a>
                    </div>
                    <div class="col-12">
                      {% include 'message.html' %}
